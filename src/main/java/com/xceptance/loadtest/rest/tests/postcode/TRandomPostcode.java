@@ -1,4 +1,4 @@
-package com.xceptance.loadtest.rest.tests;
+package com.xceptance.loadtest.rest.tests.postcode;
 
 import org.junit.Assert;
 
