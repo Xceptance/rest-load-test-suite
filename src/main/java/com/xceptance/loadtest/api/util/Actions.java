@@ -1,9 +1,10 @@
 package com.xceptance.loadtest.api.util;
 
 import com.xceptance.xlt.api.actions.AbstractAction;
+import com.xceptance.xlt.engine.SessionImpl;
 
 /**
- * Convenience methods for step definitions
+ * Convenience methods for actions to avoid that you have to program it yourself
  *
  * @author rschwietzke
  */
@@ -35,6 +36,23 @@ public class Actions
             @Override
             protected void postValidate() throws Exception
             {
+            }
+
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void run() throws Throwable
+            {
+                try
+                {
+                    super.run();
+                }
+                finally
+                {
+                    // add an empty "page" as the result of this action
+                    SessionImpl.getCurrent().getRequestHistory().add(getTimerName());
+                }
             }
 
         }.run();
@@ -91,6 +109,22 @@ public class Actions
         {
         }
 
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void run() throws Throwable
+        {
+            try
+            {
+                super.run();
+            }
+            finally
+            {
+                // add an empty "page" as the result of this action
+                SessionImpl.getCurrent().getRequestHistory().add(getTimerName());
+            }
+        }
     }
 }
 

@@ -40,7 +40,7 @@ public class TRandomPostcode extends RESTTestCase
         });
 
         // Ok, extract data and use it later again
-        final String postcode = Actions.get("Random Postcode", t ->
+        final String postcode = Actions.get("Get Random Postcode", t ->
         {
             final HttpResponse r = new HttpRequest().timerName(t).baseUrl("https://api.postcodes.io").relativeUrl("/random/postcodes").fire();
             r.checkStatusCode(200);
@@ -58,6 +58,24 @@ public class TRandomPostcode extends RESTTestCase
 
             Assert.assertTrue(JsonPath.parse(r.getContentAsString()).read("$.result", Boolean.class));
         });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void tearDown()
+    {
+        super.tearDown();
+
+        // if you don't close it, it can reuse the connection and the negotiated keys of TLS
+        // that is about 100x (!) faster than closing... but you have state of course, your call!!!!
+        // this.closeWebClient();
+
+        // you can do alternatively just cleaning of the cookie state if you have any, if you
+        // don't have any... don't run that code, because performance testing is performance
+        // programming
+        // this.clearCookies();
     }
 }
 

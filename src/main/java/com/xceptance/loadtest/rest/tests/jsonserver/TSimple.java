@@ -13,42 +13,45 @@ import com.xceptance.xlt.engine.httprequest.HttpResponse;
 public class TSimple extends RESTTestCase
 {
     /**
-     * Using the https://github.com/clue/docker-json-server of
-     * https://github.com/typicode/json-server or http://jsonplaceholder.typicode.com/
-     *
-     * Our Test JSON
-     *
-     * <pre>
-     * {
-     *      "posts": [
-     *          { "id": "1", "title": "json-server", "author": "Bob", "body": "This is text" }
-     *      ],
-     *      "comments": [
-     *           { "postId": "1", "id": "1", "name": "Cool", "author": "Elise", "body": "Example comment" }
-     *      ]
-     * }
-     * </pre>
+     * Using the http://jsonplaceholder.typicode.com/
      *
      * @throws Throwable
      */
     @Override
     public void test() throws Throwable
     {
-        // just fetch a post
+        // just fetch single post aka the first one
         Actions.run("Get Post", t ->
         {
-            final HttpResponse r = new HttpRequest().timerName(t).baseUrl("http://localhost:8080").relativeUrl("/posts/1").fire();
+            final HttpResponse r = new HttpRequest().timerName(t).baseUrl("https://jsonplaceholder.typicode.com").relativeUrl("/posts/1").fire();
             r.checkStatusCode(200);
 
-            final String response = r.getContentAsString();
-
             // ok, get us the post code and use the jsonpath query language for that
-            final ReadContext ctx = JsonPath.parse(response);
-            Assert.assertTrue(1 == ctx.read("$.id", Integer.class));
+            final ReadContext ctx = JsonPath.parse(r.getContentAsString());
+
+            // verify
+            Assert.assertTrue(1 == ctx.read("$.userId", Integer.class));
             Assert.assertTrue(ctx.read("$.title", String.class).length() > 0);
             Assert.assertTrue(ctx.read("$.body", String.class).length() > 0);
-            Assert.assertEquals("Bob", ctx.read("$.author", String.class));
         });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void tearDown()
+    {
+        super.tearDown();
+
+        // if you don't close it, it can reuse the connection and the negotiated keys of TLS
+        // that is about 100x (!) faster than closing... but you have state of course, your call!!!!
+        // this.closeWebClient();
+
+        // you can do alternatively just cleaning of the cookie state if you have any, if you
+        // don't have any... don't run that code, because performance testing is performance
+        // programming
+        // this.clearCookies();
     }
 }
 
