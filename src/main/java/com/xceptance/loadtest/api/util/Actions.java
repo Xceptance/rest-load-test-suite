@@ -1,15 +1,24 @@
 package com.xceptance.loadtest.api.util;
 
+import com.xceptance.loadtest.api.tests.RESTTestCase;
 import com.xceptance.xlt.api.actions.AbstractAction;
 import com.xceptance.xlt.engine.SessionImpl;
 
 /**
  * Convenience methods for actions to avoid that you have to program it yourself
  *
- * @author rschwietzke
+ * @author Rene Schwietzke
  */
 public class Actions
 {
+    /**
+     * Runs an Action defined by a Lambda Function and returns the value, which is returned in this
+     * action for further use.
+     *
+     * @param timerName
+     * @param action
+     * @throws Throwable
+     */
     public static void run(final String timerName, final Action action) throws Throwable
     {
         new AbstractAction(null, timerName)
@@ -51,13 +60,20 @@ public class Actions
                 finally
                 {
                     // add an empty "page" as the result of this action
-                    SessionImpl.getCurrent().getRequestHistory().add(getTimerName());
+                    SessionImpl.getCurrent().getRequestHistory().add(RESTTestCase.getSiteSpecificName(getTimerName(), Context.getSite().id));
                 }
             }
 
         }.run();
     }
 
+    /**
+     * Runs an Action defined by a Lambda Function without any return value.
+     *
+     * @param timerName
+     * @param action
+     * @throws Throwable
+     */
     public static <T> T get(final String timerName, final SupplierAction<T> action) throws Throwable
     {
         final AbstractActionWithResult<T> a = new AbstractActionWithResult<>(null, timerName, action);
@@ -95,7 +111,7 @@ public class Actions
         {
             try
             {
-                result = action.get(this.getTimerName());
+                result = action.get(RESTTestCase.getSiteSpecificName(getTimerName(), Context.getSite().id));
             }
             catch (final Throwable e)
             {
@@ -122,7 +138,7 @@ public class Actions
             finally
             {
                 // add an empty "page" as the result of this action
-                SessionImpl.getCurrent().getRequestHistory().add(getTimerName());
+                SessionImpl.getCurrent().getRequestHistory().add(RESTTestCase.getSiteSpecificName(getTimerName(), Context.getSite().id));
             }
         }
     }

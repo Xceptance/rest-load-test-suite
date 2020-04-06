@@ -1,20 +1,31 @@
 package com.xceptance.loadtest.api.tests;
 
+import java.text.MessageFormat;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import com.xceptance.loadtest.api.data.Site;
+import com.xceptance.loadtest.api.util.Context;
 import com.xceptance.xlt.api.engine.Session;
 import com.xceptance.xlt.api.util.XltLogger;
+import com.xceptance.xlt.api.util.XltProperties;
+import com.xceptance.xlt.api.util.XltRandom;
 import com.xceptance.xlt.engine.XltWebClient;
 import com.xceptance.xlt.engine.httprequest.HttpRequest;
 
 /**
- * Base class of a REST test with recycling of the web client to avoid high start up cost.
+ * Base class of a REST test
  *
  * @author Rene Schwietzke
  */
-public abstract class RESTTestCase extends com.xceptance.xlt.api.tests.AbstractTestCase
+public abstract class RESTTestCase extends com.xceptance.xlt.api.tests.AbstractTestCase implements SiteByMarketShare
 {
+    /**
+     * The determined site
+     */
+    private Site site;
+
     /**
      * The web client that is used by default for performing the requests.
      */
@@ -42,6 +53,36 @@ public abstract class RESTTestCase extends com.xceptance.xlt.api.tests.AbstractT
 
         // set the web client in this context
         HttpRequest.setDefaultWebClient(WEBCLIENT.get());
+
+        // Set test name depending if we have sites or not
+        setTestName(getSiteSpecificName(getTestName(), getSite().id));
+
+        // this moved here to make sure we see the exceptions
+        Context.createContext(
+                        XltProperties.getInstance(),
+                        Session.getCurrent().getUserName(),
+                        getClass().getName(),
+                        getSite());
+    }
+
+    public static String getSiteSpecificName(final String name, final String siteId)
+    {
+        if ("default".equals(siteId) == false && "noneSite".equals(siteId) == false)
+        {
+            // we have something non default
+            return MessageFormat.format("{0}_{1}", name, siteId);
+        }
+        return name;
+    }
+
+    /**
+     * Returns a random site
+     *
+     * @return
+     */
+    public Site getSite()
+    {
+        return site == null ? site = supplySite() : site;
     }
 
     /**
@@ -108,20 +149,17 @@ public abstract class RESTTestCase extends com.xceptance.xlt.api.tests.AbstractT
     {
         // We don't call super, because it logs just a message and that costs even though
         // it is only important for debugging... speed!!!
-        // super.tearDown();
+        if (!Context.isLoadTest)
+        {
+            super.tearDown();
 
-        // ** Release all resources so we don't have state
-        // If you test from a server against a service, you might want to keep that
-        // disabled because the server also won't close the pool. If you test from
-        // a client that does only a few calls in a session/transaction, you might
-        // want to use close() to emulate the state of the fresh connection. But that
-        // greatly limits throughput but it is as close to the real deal as possible.
-        // If your client collects a state aka cookies for instance, you probably have
-        // to take care of cleaning this manually of you don't want to close the connections
-        // to avoid the most expensive pieces aka HTTPS negotiations.
-        //
-        // Prefer to handle that in your test case manually by overwriting tearDown()
-        // WEBCLIENT.get().close();
+            // add some console output to repeat testcase with same random values
+            System.out.println();
+            System.out.println("To repeat this test case with the same random values, add the following line to your dev.properties file:");
+            System.out.println("    com.xceptance.xlt.random.initValue = " + XltRandom.getSeed());
+            System.out.println();
+        }
+
     }
 
 }
