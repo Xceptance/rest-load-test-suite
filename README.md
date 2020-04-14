@@ -23,7 +23,7 @@ The test suite demonstrates the following features and functionalities:
 
 We provide different test cases, displaying different use cases and approaches. 
 
-* Postman Echo Service Test (com.xceptance.loadtest.rest.tests.postman): This package contains some test showing different approaches on action handling as well es different REST specific examples including POST, GET, Basic Auth, validation and value extraction. 
+* Postman Echo Service Test (com.xceptance.loadtest.rest.tests.postman): This package contains some test showing different approaches on action handling as well as different REST specific examples including POST, GET, Basic Auth, validation and value extraction. 
 * Wikipedia Tests (com.xceptance.loadtest.rest.tests.wikipedia): This package contains some more complex tests using the Wikimedia API, data storage and validation.
 * Postcode Test (com.xceptance.loadtest.rest.tests.postcode): This package contains a test case showing an example for postcodes.io.
 
@@ -36,10 +36,10 @@ Please be aware, that none of these services designed or prepared to withstand a
 
 To run the provided example test cases follow the steps below:
 
-* Import project into your prefered IDE using Maven.
-* (For wikipedia test cases only) Rename `config/data/sites/DE/private-data.yaml.template` and `config/data/sites/US/private-data.yaml.template` to `private-data.yaml.template` and fill in the according data. Also for the login test, enter login data into according `accounts.csv`.
+* Import project into your preferred IDE using Maven.
+* (For Wikipedia test cases only) Rename `config/data/sites/DE/private-data.yaml.template` and `config/data/sites/US/private-data.yaml.template` to `private-data.yaml` and fill in the according data. Also for the login test, enter login data into according `accounts.csv`.
 * Choose a test case to run from a subpackage of `com.xceptance.loadtest.rest.tests` and run it as a JUnit test.
-* Check result browser at `restults/<Name of your test>.html`.
+* Check result browser at `results/<Name of your test>.html`.
 
 ## XLT Documentation
 
@@ -62,7 +62,7 @@ The following sections describes the organization of the test suite. Major code 
 
 Main parts of the test suite are the test scenarios source code, test configuration and test data as well as (automatically generated) test results.
 
-General organization of the test suite's source code is described in the following section. The test suite comes as a maven project. Use your preferred IDE to import the project and run the test suite without further modification.
+General organization of the test suite's source code is described in the following section. The test suite comes as a Maven project. Use your preferred IDE to import the project and run the test suite without further modification.
 
 Test case and suite configuration is available in the directory `/config`. Likewise test data and further configuration is available in the directory `/config/data`. Configuration and data of the test suite adheres to some concepts described in later sections of this document.
 
@@ -95,7 +95,7 @@ The project specific code contains three sub packages:
 
 ### API Layer Interfaces and Base Classes
 
-Each test case extends `RESTTestCase` which in turn utilises `AbstractTestCase`, provided by XLT. This parent class adds some extra features to a normal XLT test case, like the `Context`, site handling and some additional information logging.
+Each test case extends `RESTTestCase` which in turn utilizes `AbstractTestCase`, provided by XLT. This parent class adds some extra features to a normal XLT test case, like the `Context`, site handling and some additional information logging.
 
 If a test case is going to use the automated site/region/language distribution and configuration, it needs to implement the `SiteByMarketShare` interface. This comes with the `RESTTestCase` class per default.
 
@@ -106,7 +106,7 @@ Project configuration, project data and general load test execution configuratio
 
 The following files are available with their general intent and contents briefly described:
 
-`default.properties` - General XLT and suite configuration, like proxy settings, XLT timeout settings, http filter, Javascript settings, test data management settings, result and reporting settings. This file specifies the general set of properties and other property files will typically override these settings in a more specific way.
+`default.properties` - General XLT and suite configuration, like proxy settings, XLT timeout settings, HTTP filter, JavaScript settings, test data management settings, result and reporting settings. This file specifies the general set of properties and other property files will typically override these settings in a more specific way.
 
 `dev-log4j.properties` - Logging properties for development mode.
 
@@ -225,7 +225,7 @@ posters/config/data/
         └── flash.yaml
 ```
 
-If further yaml config files are need, for example a configuration for a flashsale, the according filename needs to be added to the `general.properties.yaml.site.files` property in the `config/project.properties` file.
+If further yaml config files are need, for example a configuration for a flash sale, the according filename needs to be added to the `general.properties.yaml.site.files` property in the `config/project.properties` file.
 
 ### Properties
 
@@ -247,7 +247,7 @@ general:
     host: host.com
     baseUrl: ${host}/my-site
     credentials: # Comment here
-        username: storefront # Comment there
+        username: user # Comment there
         password: foobar
 ```
 
@@ -255,14 +255,14 @@ general:
 ```
 general.host = host.com
 general.host.baseUrl = host.com/my-site
-general.credentials.username = storefront
+general.credentials.username = user
 general.credentials.password = foobar
 ```
 
 #### Private Site Configuration
 
 The `private-data.yaml` defines access and credentials for the system under test. If required, this file can be excluded from your repository (via .gitignore).
-This test suite contains some readily setup `private-data.yaml` files for some of the scenarios, but is laking some files as well. For this prupose a predefined template file `private-data.yaml.template` was placed in the according folders. Rename it to `private-data.yaml` and fill out the missing values to run the examples.
+This test suite contains some readily setup `private-data.yaml` files for some of the scenarios, but is laking some files as well. For this purpose a predefined template file `private-data.yaml.template` was placed in the according folders. Rename it to `private-data.yaml` and fill out the missing values to run the examples.
 
 
 ### Test Suite Data
