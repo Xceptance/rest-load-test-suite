@@ -95,8 +95,6 @@ The project specific code contains three sub packages:
 
 ### API Layer Interfaces and Base Classes
 
-yyy
-
 Each test case extends `RESTTestCase` which in turn utilises `AbstractTestCase`, provided by XLT. This parent class adds some extra features to a normal XLT test case, like the `Context`, site handling and some additional information logging.
 
 If a test case is going to use the automated site/region/language distribution and configuration, it needs to implement the `SiteByMarketShare` interface. This comes with the `RESTTestCase` class per default.
