@@ -11,7 +11,7 @@ import com.xceptance.xlt.api.data.ExclusiveDataProvider;
 import com.xceptance.xlt.api.data.ExclusiveDataProvider.Parser;
 
 /**
- * Mapps the XLT ExclusiveDataProvider to the site based folder structure.
+ * Maps the XLT ExclusiveDataProvider to the site based folder structure.
  *
  * @author Bernd Weigel
  */

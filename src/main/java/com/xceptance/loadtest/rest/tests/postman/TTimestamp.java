@@ -17,10 +17,10 @@ import com.xceptance.xlt.engine.httprequest.HttpResponse;
  * This is a more complex test case using the postman echo service and performing the following
  * steps.
  *
- * 1. Get a time stamp from the service 
- * 2. Validate it against the service 
- * 3. Subtract a random number of days from the time stamp 
- * 4. Get an object interpretation for this time stamp 
+ * 1. Get a time stamp from the service
+ * 2. Validate it against the service
+ * 3. Subtract a random number of days from the time stamp
+ * 4. Get an object interpretation for this time stamp
  * 5. Check if the resulting year is a leap year
  *
  * For a documentation of the service please visit https://docs.postman-echo.com/
@@ -131,7 +131,7 @@ public class TTimestamp extends RESTTestCase implements NonSiteRelatedTest
         super.tearDown();
 
         // please note: the code below could also be placed in the super class and is mostly placed
-        // here for visibility. Still it depends on the actual implenetation purposes
+        // here for visibility. Still it depends on the actual implementation purposes
 
         // you can do alternatively just cleaning of the cookie state if you have any, if you
         // don't have any... don't run that code, because performance testing is performance

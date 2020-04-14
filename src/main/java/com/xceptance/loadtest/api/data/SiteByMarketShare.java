@@ -1,7 +1,4 @@
-package com.xceptance.loadtest.api.tests;
-
-import com.xceptance.loadtest.api.data.Site;
-import com.xceptance.loadtest.api.data.SiteSupplier;
+package com.xceptance.loadtest.api.data;
 
 /**
  *

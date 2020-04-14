@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 import com.xceptance.loadtest.api.configuration.ConfigConstants;
 
 /**
- * This annoation defines what the source of a property is.
+ * This annotation defines what the source of a property is.
  *
  * @author Rene Schwietzke
  */
@@ -41,10 +41,10 @@ public @interface Property
     boolean immutable() default true;
 
     /**
-     * Property keys are extended by default to allow easier and more consistent
-     * access and definition. Can be turned off optionally.
+     * Property keys are extended by default to allow easier and more consistent access and
+     * definition. Can be turned off optionally.
      *
-     * @return false if automcomplete is not desired, true by default
+     * @return false if auto complete is not desired, true by default
      */
     boolean autocomplete() default true;
 
