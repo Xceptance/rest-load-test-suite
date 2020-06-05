@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.xceptance.loadtest.api.data.Site;
+import com.xceptance.loadtest.api.data.SiteByMarketShare;
 import com.xceptance.loadtest.api.util.Context;
 import com.xceptance.xlt.api.engine.Session;
 import com.xceptance.xlt.api.util.XltLogger;
@@ -29,7 +30,7 @@ public abstract class RESTTestCase extends com.xceptance.xlt.api.tests.AbstractT
     /**
      * The web client that is used by default for performing the requests.
      */
-    private static final ThreadLocal<XltWebClient> WEBCLIENT = new ThreadLocal<XltWebClient>()
+    private static final ThreadLocal<XltWebClient> WEBCLIENT = new ThreadLocal<>()
     {
         @Override
         protected XltWebClient initialValue()
