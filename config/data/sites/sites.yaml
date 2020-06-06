@@ -3,8 +3,8 @@
 # with name general.closeWebClient there as well.
 
 general:
-    closeWebClient: true
-    clearCookies: true
+    closeWebClient: false
+    clearCookies: false
 
 # Definition of all available sites
 sites:
