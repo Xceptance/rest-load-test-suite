@@ -2,6 +2,7 @@ package com.xceptance.loadtest.rest.configuration;
 
 import com.xceptance.loadtest.api.configuration.ConfigDistribution;
 import com.xceptance.loadtest.api.configuration.ConfigProbability;
+import com.xceptance.loadtest.api.configuration.ConfigRange;
 import com.xceptance.loadtest.api.configuration.LTProperties;
 import com.xceptance.loadtest.api.configuration.annotations.Property;
 
@@ -37,6 +38,15 @@ public class Configuration
 
     @Property(key = "general.clearCookies")
     public boolean clearCookies;
+
+    // =========================================================
+    // jsonplaceholder test case config
+
+    @Property(key = "jsonplaceholder.host")
+    public String jsonplaceholderHost;
+
+    @Property(key = "jsonplaceholder.get.count")
+    public ConfigRange jsonplaceholderGetCount;
 
     // =========================================================
     // Wikipedia Test Case specific configurations

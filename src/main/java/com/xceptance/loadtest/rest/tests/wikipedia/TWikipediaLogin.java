@@ -12,8 +12,8 @@ import com.xceptance.loadtest.api.util.SimpleRESTJSONAction;
 /**
  * Simple site specific example test case for the Wikipedia API. It follows the steps below:
  *
- * 1. Choose account from site specific file (config/data/sites/<SITE>/accounts.csv)
- * 2. Get Token from Wikipedie
+ * 1. Choose account from site specific file (config/data/sites/<SITE>/accounts.csv) 
+ * 2. Get Token from Wikipedia 
  * 3. Login into Bot Account
  *
  * @author Bernd Weigel

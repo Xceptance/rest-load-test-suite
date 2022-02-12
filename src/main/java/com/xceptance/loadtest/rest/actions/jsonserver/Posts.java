@@ -7,9 +7,9 @@ import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import com.xceptance.loadtest.api.util.Actions;
+import com.xceptance.loadtest.api.util.Context;
 import com.xceptance.loadtest.rest.actions.jsonserver.data.Post;
 import com.xceptance.loadtest.rest.util.GsonUtil;
-import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.engine.httprequest.HttpRequest;
 import com.xceptance.xlt.engine.httprequest.HttpResponse;
 
@@ -32,10 +32,6 @@ public class Posts
      */
     public static Post byId(final String id) throws Throwable
     {
-        // this can be of course also passed to this method or look at the larger framework
-        // https://github.com/Xceptance/posters-advanced-loadtest-suite and its Context concept
-        final var host = XltProperties.getInstance().getProperty("jsonplaceholder.host");
-
         // this is the measurement block to assign the proper naming to everything that happens
         // here and report the action aka activity as its own measurement block
         return Actions.get("Get Post", t ->
@@ -44,7 +40,7 @@ public class Posts
             // we can name it manually too of course
             final HttpResponse r = new HttpRequest()
                             .timerName(t)
-                            .baseUrl(host)
+                            .baseUrl(Context.configuration().jsonplaceholderHost)
                             .relativeUrl("/posts/" + id) // simple formatting of the url
                             .fire();
             r.checkStatusCode(200); // ok?
@@ -62,10 +58,6 @@ public class Posts
      */
     public static String create(final Post post) throws Throwable
     {
-        // this can be of course also passed to this method or look at the larger framework
-        // https://github.com/Xceptance/posters-advanced-loadtest-suite and its Context concept
-        final var host = XltProperties.getInstance().getProperty("jsonplaceholder.host");
-
         // add a post and get preserve the id, it cannot be used here again,
         // because the test service is not using a database, hence it does not
         // preserve our data
@@ -73,7 +65,7 @@ public class Posts
         {
             final HttpResponse r = new HttpRequest()
                             .timerName(t)
-                            .baseUrl(host)
+                            .baseUrl(Context.configuration().jsonplaceholderHost)
                             .relativeUrl("/posts")
                             .body(new Gson().toJson(post)) // Serialize it
                             .method(HttpMethod.POST)

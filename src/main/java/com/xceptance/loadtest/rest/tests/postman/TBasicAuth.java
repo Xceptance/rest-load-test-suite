@@ -1,5 +1,7 @@
 package com.xceptance.loadtest.rest.tests.postman;
 
+import java.util.Optional;
+
 import org.junit.Assert;
 
 import com.gargoylesoftware.htmlunit.HttpMethod;
@@ -36,6 +38,10 @@ public class TBasicAuth extends RESTTestCase implements NonSiteRelatedTest
                             .method(HttpMethod.GET)
                             .fire();
             unauthorizedResponse.checkStatusCode(401);
+
+            // we have not supplied the auth in any properties, such as general.authorization
+            // hence we set it here for demo purposes in our context which will be asked first
+            Context.get().data.authorization = Optional.of("Basic cG9zdG1hbjpwYXNzd29yZA==");
 
             // Now let's use the AuthorizedHttpRequest, which takes the authorization header from
             // the configuration.

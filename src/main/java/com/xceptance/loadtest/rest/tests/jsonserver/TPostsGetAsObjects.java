@@ -4,10 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import com.xceptance.loadtest.api.tests.RESTTestCase;
 import com.xceptance.loadtest.api.util.Actions;
+import com.xceptance.loadtest.api.util.Context;
 import com.xceptance.loadtest.rest.actions.jsonserver.Posts;
 import com.xceptance.loadtest.rest.actions.jsonserver.data.Post;
 import com.xceptance.loadtest.rest.util.GsonUtil;
-import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.api.util.XltRandom;
 import com.xceptance.xlt.engine.httprequest.HttpRequest;
 import com.xceptance.xlt.engine.httprequest.HttpResponse;
@@ -23,12 +23,14 @@ public class TPostsGetAsObjects extends RESTTestCase
     @Override
     public void test() throws Throwable
     {
-        final var host = XltProperties.getInstance().getProperty("jsonplaceholder.host");
-
         // get us all notes and turn them into nice objects
         final var posts = Actions.get("Get Post", t ->
         {
-            final HttpResponse r = new HttpRequest().timerName(t).baseUrl(host).relativeUrl("/posts").fire();
+            final HttpResponse r = new HttpRequest()
+                            .timerName(t)
+                            .baseUrl(Context.configuration().jsonplaceholderHost)
+                            .relativeUrl("/posts")
+                            .fire();
             r.checkStatusCode(200); // ok?
 
             final var p = GsonUtil.gson().fromJson(r.getContentAsString(), Post[].class);
@@ -39,7 +41,10 @@ public class TPostsGetAsObjects extends RESTTestCase
         });
 
         // ok, we have our posts, let's fetch a few
-        final var amount = XltProperties.getInstance().getProperty("jsonplaceholder.get.count", 4);
+
+        // amount will be populated with a random value by the framework according to our
+        // range spec in the properties such as 3-5, this is fix for this iteration!
+        final var amount = Context.configuration().jsonplaceholderGetCount.value;
         for (int i = 0; i < amount; i++)
         {
             // get us a random post and fetch it as a single activity

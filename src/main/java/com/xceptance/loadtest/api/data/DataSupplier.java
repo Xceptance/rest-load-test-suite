@@ -127,14 +127,6 @@ public class DataSupplier
     /**
      * Get us a last name from a plain file
      */
-    public static String senctence()
-    {
-        return randomEntry(getSourceList("sentences.txt"));
-    }
-
-    /**
-     * Get us a last name from a plain file
-     */
     public static String street()
     {
         return randomEntry(getSourceList("streets.txt"));
@@ -156,12 +148,12 @@ public class DataSupplier
         return list.get(XltRandom.nextInt(list.size()));
     }
 
-    public static String searchterms()
+    public static String searchterm()
     {
         return randomEntry(getSourceList("searchterms.txt"));
     }
 
-    public static String sentences()
+    public static String sentence()
     {
         return randomEntry(getSourceList("sentences.txt"));
     }
@@ -185,7 +177,7 @@ public class DataSupplier
                 b.append(' ');
             }
 
-            b.append(senctence());
+            b.append(sentence());
         }
         return removeWhitespace ? StringUtils.deleteWhitespace(b.toString()) : b.toString();
     }

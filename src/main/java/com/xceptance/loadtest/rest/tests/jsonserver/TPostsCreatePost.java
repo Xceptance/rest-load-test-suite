@@ -1,9 +1,9 @@
 package com.xceptance.loadtest.rest.tests.jsonserver;
 
+import com.xceptance.loadtest.api.data.DataSupplier;
 import com.xceptance.loadtest.api.tests.RESTTestCase;
 import com.xceptance.loadtest.rest.actions.jsonserver.Posts;
 import com.xceptance.loadtest.rest.actions.jsonserver.data.Post;
-import com.xceptance.xlt.api.data.GeneralDataProvider;
 
 /**
  * Uses the http://jsonplaceholder.typicode.com/guide/ So don't hammer that public service, this is
@@ -18,9 +18,9 @@ public class TPostsCreatePost extends RESTTestCase
     {
         // create a post and set data
         final Post post = new Post();
-        post.author = GeneralDataProvider.getInstance().getFirstName(true);
-        post.title = "Entry of " + GeneralDataProvider.getInstance().getTown(true);
-        post.body = GeneralDataProvider.getInstance().getText(2, true);
+        post.author = DataSupplier.firstName();
+        post.title = "Entry of " + DataSupplier.town();
+        post.body = DataSupplier.getText(2, false);
 
         // add a post and get the id
         final var id = Posts.create(post);

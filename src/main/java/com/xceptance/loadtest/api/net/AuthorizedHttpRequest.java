@@ -33,8 +33,11 @@ public class AuthorizedHttpRequest extends HttpRequest
 
     private void authorize()
     {
-        header("Authorization", Context.get().data.authorization //check for specifically set authorization for this test case run
-                                        .orElse(Optional.of(Context.configuration().authorization) //if no run specific authorization is set, check for general configured authorization
-                                        .orElseThrow(() -> new IllegalArgumentException("Authorization not set in Context.data.authorization nor in the configuration"))));
+        // check for specifically set authorization for this test case run first
+        // Context.get().data.authorization
+        // next take anything from external Context.configuration().authorization aka
+        // "general.authorization"
+        header("Authorization", Context.get().data.authorization
+                        .orElseGet(() -> Optional.ofNullable(Context.configuration().authorization).orElseThrow()));
     }
 }

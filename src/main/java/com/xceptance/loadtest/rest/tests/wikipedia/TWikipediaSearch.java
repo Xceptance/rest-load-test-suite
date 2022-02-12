@@ -14,12 +14,12 @@ import net.minidev.json.JSONArray;
 /**
  * Simple site specific example test case for the Wikipedia API. It follows the steps below:
  *
- * 1. Perform Search on Wikimedia API 
- * 2. Continue Search using a configured probability. 
- * 3. Choose random Wikipedia page 
- * 4. Get links which, leads to this page 
- * 5. Choose random link 
- * 6. Repeat steps 4 and 5 in a configured distribution 
+ * 1. Perform Search on Wikimedia API
+ * 2. Continue Search using a configured probability.
+ * 3. Choose random Wikipedia page
+ * 4. Get links which, leads to this page
+ * 5. Choose random link
+ * 6. Repeat steps 4 and 5 in a configured distribution
  * 7. Get first sentences for the last chosen page.
  *
  * @author Bernd Weigel
@@ -37,7 +37,7 @@ public class TWikipediaSearch extends RESTTestCase
     {
         // Get a random search term from a predefined list
         // (config/data/languages/<LANG_OR_LOCALE>/serchterms.txt).
-        final String searchTerm = DataSupplier.searchterms();
+        final String searchTerm = DataSupplier.searchterm();
 
         // Perfrom search call again wiki API, store, some values from the response.
         new SimpleRESTJSONAction("Search")

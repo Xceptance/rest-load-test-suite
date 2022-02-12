@@ -3,8 +3,14 @@
 # with name general.closeWebClient there as well.
 
 general:
-    closeWebClient: false
-    clearCookies: false
+   closeWebClient: false
+   clearCookies: false
+   userAgent: XLT RestTest Suite 1.0 (https://github.com/Xceptance/posters-advanced-loadtest-suite)
+
+jsonplaceholder:
+   host: https://jsonplaceholder.typicode.com
+   get:
+      count.range: 3-5
 
 # Definition of all available sites
 sites:
