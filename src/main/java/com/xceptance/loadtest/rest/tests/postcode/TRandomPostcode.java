@@ -16,7 +16,9 @@ import com.xceptance.xlt.engine.httprequest.HttpResponse;
 public class TRandomPostcode extends RESTTestCase implements NonSiteRelatedTest
 {
     /**
-     * Using the https://postcodes.io/ API
+     * Using the https://postcodes.io/ API By the way, you have any freedom to make that really
+     * great code, hence decompose this class into subclasses, run dedicated classes per action and
+     * much more. See the jsonserver examples for something using a different style.
      *
      * @throws Throwable
      */
