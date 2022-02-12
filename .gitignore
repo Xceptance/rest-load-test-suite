@@ -1,15 +1,6 @@
 /results/
 /classes/
 /target/
-bin/
-
-.idea/
-*.iml
-
-.classpath
-.project
 .settings/
-
-config/git.properties
-config/browser.properties
-private-data.yaml
+.idea/
+.classpath
