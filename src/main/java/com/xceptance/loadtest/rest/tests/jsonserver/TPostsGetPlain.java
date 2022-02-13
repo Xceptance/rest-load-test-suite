@@ -26,7 +26,7 @@ public class TPostsGetPlain extends RESTTestCase
         final var host = Context.configuration().jsonplaceholderHost;
 
         // just fetch single post aka the first one
-        Actions.run("Get Post", t ->
+        Actions.run("Get First Post", t ->
         {
             final HttpResponse r = new HttpRequest().timerName(t).baseUrl(host).relativeUrl("/posts/1").fire();
             r.checkStatusCode(200);

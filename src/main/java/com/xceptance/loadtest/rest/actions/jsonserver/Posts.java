@@ -1,5 +1,7 @@
 package com.xceptance.loadtest.rest.actions.jsonserver;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Assert;
 
 import com.gargoylesoftware.htmlunit.HttpMethod;
@@ -22,6 +24,31 @@ import com.xceptance.xlt.engine.httprequest.HttpResponse;
  */
 public class Posts
 {
+    /**
+     * Fetches all posts
+     *
+     * @throws Throwable
+     */
+    public static Post[] all() throws Throwable
+    {
+        // get us all notes and turn them into nice objects
+        return Actions.get("Get Posts", t ->
+        {
+            final HttpResponse r = new HttpRequest()
+                            .timerName(t)
+                            .baseUrl(Context.configuration().jsonplaceholderHost)
+                            .relativeUrl("/posts")
+                            .fire();
+            r.checkStatusCode(200); // ok?
+
+            final var p = GsonUtil.gson().fromJson(r.getContentAsString(), Post[].class);
+
+            assertEquals(100, p.length);
+
+            return p;
+        });
+    }
+
     /**
      * Fetches a post by ID
      *

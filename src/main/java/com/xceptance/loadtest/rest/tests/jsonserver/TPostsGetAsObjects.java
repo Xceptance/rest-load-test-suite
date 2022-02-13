@@ -3,14 +3,9 @@ package com.xceptance.loadtest.rest.tests.jsonserver;
 import static org.junit.Assert.assertEquals;
 
 import com.xceptance.loadtest.api.tests.RESTTestCase;
-import com.xceptance.loadtest.api.util.Actions;
 import com.xceptance.loadtest.api.util.Context;
 import com.xceptance.loadtest.rest.actions.jsonserver.Posts;
-import com.xceptance.loadtest.rest.actions.jsonserver.data.Post;
-import com.xceptance.loadtest.rest.util.GsonUtil;
 import com.xceptance.xlt.api.util.XltRandom;
-import com.xceptance.xlt.engine.httprequest.HttpRequest;
-import com.xceptance.xlt.engine.httprequest.HttpResponse;
 
 
 public class TPostsGetAsObjects extends RESTTestCase
@@ -23,22 +18,8 @@ public class TPostsGetAsObjects extends RESTTestCase
     @Override
     public void test() throws Throwable
     {
-        // get us all notes and turn them into nice objects
-        final var posts = Actions.get("Get Post", t ->
-        {
-            final HttpResponse r = new HttpRequest()
-                            .timerName(t)
-                            .baseUrl(Context.configuration().jsonplaceholderHost)
-                            .relativeUrl("/posts")
-                            .fire();
-            r.checkStatusCode(200); // ok?
-
-            final var p = GsonUtil.gson().fromJson(r.getContentAsString(), Post[].class);
-
-            assertEquals(100, p.length);
-
-            return p;
-        });
+        // fetch all first
+        final var posts = Posts.all();
 
         // ok, we have our posts, let's fetch a few
 
