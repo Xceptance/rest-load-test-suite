@@ -57,7 +57,7 @@ public class TPostsGetPlain extends RESTTestCase
                 .statusCode(200)
                 .body("userId", equalTo(1))
                 .body("title", not(emptyString()))
-                .body(containsString("rerum est autem"));
+                .body("body", containsString("rerum est autem"));
         });
     }
 
