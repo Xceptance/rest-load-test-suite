@@ -1,6 +1,7 @@
 package com.xceptance.loadtest.api.data;
 
 import com.xceptance.xlt.api.engine.CustomData;
+import com.xceptance.xlt.api.engine.GlobalClock;
 import com.xceptance.xlt.api.engine.Session;
 
 public class CustomTimer
@@ -16,7 +17,8 @@ public class CustomTimer
      */
     private CustomTimer(final String name)
     {
-        this.customData = new CustomData(name);
+        customData = new CustomData(name);
+        setTime(customData);
     }
 
     /**
@@ -38,8 +40,7 @@ public class CustomTimer
      */
     public CustomTimer stop()
     {
-        this.customData.setRunTime();
-
+        stop(customData);
         return this;
     }
 
@@ -50,9 +51,8 @@ public class CustomTimer
      */
     public long stopAndGet()
     {
-        this.customData.setRunTime();
-
-        return this.customData.getRunTime();
+        stop(customData);
+        return customData.getRunTime();
     }
 
     /**
@@ -72,7 +72,7 @@ public class CustomTimer
      */
     public long stopAndLog(final boolean failed)
     {
-        return stopAndLog(this.customData.getName(), failed);
+        return stopAndLog(customData.getName(), failed);
     }
 
     /**
@@ -87,12 +87,12 @@ public class CustomTimer
     public long stopAndLog(final String newName, final boolean failed)
     {
         stop();
-        this.customData.setFailed(failed);
-        this.customData.setName(newName);
+        customData.setFailed(failed);
+        customData.setName(newName);
 
-        Session.getCurrent().getDataManager().logDataRecord(this.customData);
+        Session.getCurrent().getDataManager().logDataRecord(customData);
 
-        return this.customData.getRunTime();
+        return customData.getRunTime();
     }
 
     /**
@@ -109,6 +109,7 @@ public class CustomTimer
     {
         final CustomData data = new CustomData();
         data.setName(name);
+        setTime(data);
         data.setRunTime(runtime);
         data.setFailed(false);
 
@@ -140,7 +141,8 @@ public class CustomTimer
     public static void runAndLog(final String name, final Runnable task)
     {
         final CustomData cd = new CustomData(name);
-
+        setTime(cd);
+        
         try
         {
             task.run();
@@ -152,9 +154,29 @@ public class CustomTimer
         }
         finally
         {
-            cd.setRunTime();
+            stop(cd);
             Session.getCurrent().getDataManager().logDataRecord(cd);
         }
     }
-}
 
+    /**
+     * Starts the timer by setting the current timestamp as the timer's start time.
+     * 
+     * @param timer
+     */
+    private static void setTime(final CustomData timer)
+    {
+        timer.setTime(GlobalClock.millis());
+    }
+
+    /**
+     * Stops the timer and sets the runtime (NOW - startTime).
+     * 
+     * @param timer
+     */
+    private static void stop(final CustomData timer)
+    {
+        final long endTime = GlobalClock.millis();
+        timer.setRunTime(endTime - timer.getTime());
+    }
+}

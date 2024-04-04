@@ -3,7 +3,7 @@ package com.xceptance.loadtest.rest.tests.wikipedia;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.gargoylesoftware.htmlunit.HttpMethod;
+import org.htmlunit.HttpMethod;
 import com.xceptance.loadtest.api.data.Account;
 import com.xceptance.loadtest.api.tests.RESTTestCase;
 import com.xceptance.loadtest.api.util.Context;

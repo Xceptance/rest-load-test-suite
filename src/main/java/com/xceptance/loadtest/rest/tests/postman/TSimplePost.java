@@ -2,7 +2,7 @@ package com.xceptance.loadtest.rest.tests.postman;
 
 import org.junit.Assert;
 
-import com.gargoylesoftware.htmlunit.HttpMethod;
+import org.htmlunit.HttpMethod;
 import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
