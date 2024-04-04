@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.restassured.RestAssured;
+
 import org.junit.Assert;
 
 import com.google.gson.Gson;
@@ -17,6 +19,7 @@ import com.xceptance.loadtest.api.data.Account;
 import com.xceptance.loadtest.api.data.CustomTimer;
 import com.xceptance.loadtest.api.data.ExclusiveDataSupplier;
 import com.xceptance.loadtest.api.data.Site;
+import com.xceptance.loadtest.api.net.restassured.MyHttpClient;
 import com.xceptance.loadtest.rest.configuration.Configuration;
 import com.xceptance.loadtest.rest.data.TestData;
 import com.xceptance.xlt.api.engine.Session;
@@ -49,9 +52,17 @@ public class Context
 
     // Our cached GSON parser and builder
     private Gson gson;
+    
+    public String timerName = "Unnamed";
 
     // Keep a quickly accessible info that we are a load test run
     public static final boolean isLoadTest = Session.getCurrent().isLoadTest();
+    
+    // Prepare for REST Assured actions
+    static
+    {
+        RestAssured.config = io.restassured.RestAssured.config().httpClient(RestAssured.config().getHttpClientConfig().httpClientFactory(MyHttpClient::new));
+    }
 
     /**
      * Constructor; Creates a new Context for a TestCase.
