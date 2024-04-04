@@ -2,7 +2,7 @@ package com.xceptance.loadtest.rest.tests.wikipedia;
 
 import java.util.Map;
 
-import com.gargoylesoftware.htmlunit.HttpMethod;
+import org.htmlunit.HttpMethod;
 import com.xceptance.loadtest.api.data.DataSupplier;
 import com.xceptance.loadtest.api.tests.RESTTestCase;
 import com.xceptance.loadtest.api.util.Context;
