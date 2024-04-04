@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.htmlunit.HttpMethod;
 import org.htmlunit.util.NameValuePair;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import com.jayway.jsonpath.ReadContext;
 import com.xceptance.loadtest.api.tests.RESTTestCase;
 import com.xceptance.xlt.api.actions.AbstractAction;
@@ -299,23 +300,63 @@ public class SimpleRESTJSONAction extends AbstractAction
     {
         switch (validation.validationType) {
             case EXISTS:
-                Assert.assertTrue(validation.message != null ? validation.message : "Response " + validation.jsonPath + " does not exists.", ctx.read(validation.jsonPath) != null);
+                Assert.assertTrue(validation.message != null ? validation.message : "Response " + validation.jsonPath + " does not exists.", pathExists(validation.jsonPath, ctx));
                 break;
             case NOT_EQUALS:
                 Assert.assertNotEquals(
                                 validation.message != null ? validation.message : "Response " + validation.jsonPath + " does equals " + validation.expectedValue + "but should not",
                                 validation.expectedValue,
-                                ctx.read(validation.jsonPath));
+                                getPathItemOrNull(validation.jsonPath, ctx));
                 break;
             case EQUALS:
                 Assert.assertEquals(validation.message != null ? validation.message : "Response " + validation.jsonPath + " does not equals " + validation.expectedValue,
                                 validation.expectedValue,
-                                ctx.read(validation.jsonPath));
+                                getPathItemOrNull(validation.jsonPath, ctx));
                 break;
 
             default:
                 break;
         }
+    }
+
+    /**
+     * Return the result of a json path or, if this does not exists return null. This suppresses a PathNotFoundException for better handling.
+     * 
+     * @param path - the json path to  
+     * @param ctx - ReadContext of the inspected json data
+     * @return
+     */
+    private Object getPathItemOrNull(final String path, final ReadContext ctx)
+    {
+        try
+        {
+            return ctx.read(path);
+        }
+        catch (PathNotFoundException e)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Return if the result of a json path exists or not. This suppresses a PathNotFoundException for better handling.
+     * 
+     * @param path - the json path to  
+     * @param ctx - ReadContext of the inspected json data
+     * @return
+     */
+    private boolean pathExists(final String path, final ReadContext ctx)
+    {
+        boolean found = true;
+        try
+        {
+            found = ctx.read(path) != null;
+        }
+        catch (PathNotFoundException e)
+        {
+            found = false;
+        }
+        return found;
     }
 
     /**
