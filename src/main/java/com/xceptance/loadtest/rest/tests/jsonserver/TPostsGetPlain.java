@@ -1,6 +1,10 @@
 package com.xceptance.loadtest.rest.tests.jsonserver;
 
-import org.junit.Assert;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
@@ -9,6 +13,8 @@ import com.xceptance.loadtest.api.util.Actions;
 import com.xceptance.loadtest.api.util.Context;
 import com.xceptance.xlt.engine.httprequest.HttpRequest;
 import com.xceptance.xlt.engine.httprequest.HttpResponse;
+
+import org.junit.Assert;
 
 
 public class TPostsGetPlain extends RESTTestCase
@@ -26,7 +32,7 @@ public class TPostsGetPlain extends RESTTestCase
         final var host = Context.configuration().jsonplaceholderHost;
 
         // just fetch single post aka the first one
-        Actions.run("Get First Post", t ->
+        Actions.run("Get First Post v1", t ->
         {
             final HttpResponse r = new HttpRequest().timerName(t).baseUrl(host).relativeUrl("/posts/1").fire();
             r.checkStatusCode(200);
@@ -37,7 +43,21 @@ public class TPostsGetPlain extends RESTTestCase
             // verify
             Assert.assertTrue(1 == ctx.read("$.userId", Integer.class));
             Assert.assertTrue(ctx.read("$.title", String.class).length() > 0);
-            Assert.assertTrue(ctx.read("$.body", String.class).length() > 0);
+            Assert.assertTrue(ctx.read("$.body", String.class).contains("rerum est autem"));
+        });
+        
+        // Same scenario, just using REST-Assured
+        Actions.run("Get First Post v2", t ->
+        {
+            given()
+                .baseUri(host)
+            .when()
+                .get("/posts/1")
+            .then().assertThat()
+                .statusCode(200)
+                .body("userId", equalTo(1))
+                .body("title", not(emptyString()))
+                .body(containsString("rerum est autem"));
         });
     }
 
