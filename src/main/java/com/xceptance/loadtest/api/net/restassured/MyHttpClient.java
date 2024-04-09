@@ -83,12 +83,12 @@ public class MyHttpClient extends AbstractHttpClient
     private CloseableHttpResponse fire(final HttpHost target, final HttpRequest request, final HttpContext context)
             throws IOException, ClientProtocolException
     {
-        final HttpResponse response = buildRequest(target, request);
+        final HttpResponse response = load(target, request);
         final WebResponse webResponse = response.getWebResponse();
         return new MyCloseableHttpResponse(webResponse);
     }
 
-    private HttpResponse buildRequest(final HttpHost target, final HttpRequest request)
+    private HttpResponse load(final HttpHost target, final HttpRequest request)
     {
         final com.xceptance.xlt.engine.httprequest.HttpRequest xltRequest = new com.xceptance.xlt.engine.httprequest.HttpRequest();
 
