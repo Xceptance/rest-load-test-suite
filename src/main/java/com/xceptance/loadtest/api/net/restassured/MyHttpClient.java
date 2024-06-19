@@ -3,6 +3,10 @@ package com.xceptance.loadtest.api.net.restassured;
 import com.xceptance.loadtest.api.util.Context;
 import com.xceptance.xlt.engine.httprequest.HttpResponse;
 
+import io.restassured.RestAssured;
+import io.restassured.filter.Filter;
+import io.restassured.specification.RequestSpecification;
+
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -28,6 +32,8 @@ import org.htmlunit.WebResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -91,13 +97,19 @@ public class MyHttpClient extends AbstractHttpClient
     private HttpResponse load(final HttpHost target, final HttpRequest request)
     {
         final com.xceptance.xlt.engine.httprequest.HttpRequest xltRequest = new com.xceptance.xlt.engine.httprequest.HttpRequest();
-
+        
+        MyFilter requestFilter = getRequestFilter();
+        
         xltRequest.timerName(Context.get().timerName)
                   .baseUrl(target.toURI())
+                  .body(requestFilter.getBody()) // if the method is not POST the body will be empty
                   .relativeUrl(request.getRequestLine().getUri())
                   .method(HttpMethod.valueOf(request.getRequestLine().getMethod()));
 
         Stream.of(request.getAllHeaders()).forEachOrdered(h -> xltRequest.header(h.getName(), h.getValue()));
+        
+        xltRequest.params(requestFilter.getQueryParams());
+        xltRequest.params(requestFilter.getRequestParams());
         
         try
         {
@@ -107,5 +119,21 @@ public class MyHttpClient extends AbstractHttpClient
         {
             throw new RuntimeException(e);
         }
+    }
+    
+    private MyFilter getRequestFilter()
+    {
+        MyFilter filter = null; 
+        List<Filter> filters = RestAssured.filters();
+        
+        Optional<Filter> first = filters.stream().filter(p -> p instanceof MyFilter) .findFirst();
+        
+        if (first.isPresent())
+        {
+            // safe to cast -> it extends the default filter
+            filter = (MyFilter) first.get();
+        }
+        
+        return filter;
     }
 }

@@ -19,6 +19,7 @@ import com.xceptance.loadtest.api.data.Account;
 import com.xceptance.loadtest.api.data.CustomTimer;
 import com.xceptance.loadtest.api.data.ExclusiveDataSupplier;
 import com.xceptance.loadtest.api.data.Site;
+import com.xceptance.loadtest.api.net.restassured.MyFilter;
 import com.xceptance.loadtest.api.net.restassured.MyHttpClient;
 import com.xceptance.loadtest.rest.configuration.Configuration;
 import com.xceptance.loadtest.rest.data.TestData;
@@ -61,7 +62,10 @@ public class Context
     // Prepare for REST Assured actions
     static
     {
-        RestAssured.config = io.restassured.RestAssured.config().httpClient(RestAssured.config().getHttpClientConfig().httpClientFactory(MyHttpClient::new));
+        RestAssured.config = io.restassured.RestAssured.config().
+                httpClient(RestAssured.config().getHttpClientConfig().httpClientFactory(MyHttpClient::new));
+        // the filter is needed as default, to get the data before the request is fired -> mapping to XLTRequest
+        RestAssured.filters(new MyFilter());
     }
 
     /**
