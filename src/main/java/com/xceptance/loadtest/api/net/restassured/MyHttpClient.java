@@ -17,6 +17,7 @@ import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.RequestDirector;
 import org.apache.http.client.UserTokenHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.routing.HttpRoutePlanner;
@@ -27,8 +28,10 @@ import org.apache.http.protocol.BasicHttpProcessor;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpRequestExecutor;
+import org.apache.http.util.Args;
 import org.htmlunit.HttpMethod;
 import org.htmlunit.WebResponse;
+import org.htmlunit.util.NameValuePair;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -41,6 +44,8 @@ import java.util.stream.Stream;
  */
 public class MyHttpClient extends AbstractHttpClient
 {
+    private Object uriBuilder;
+
     public MyHttpClient()
     {
         this(null, null);
@@ -100,16 +105,33 @@ public class MyHttpClient extends AbstractHttpClient
         
         MyFilter requestFilter = getRequestFilter();
         
+        uriBuilder = null;
+        try
+        {
+            uriBuilder = new URIBuilder(target.toURI());
+            requestFilter.getQueryParams().entrySet().forEach(e -> ((URIBuilder) uriBuilder).addParameter(e.getKey(), e.getValue()));
+            
+        } catch (URISyntaxException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // add the params to the url
+        
+
+        if (HttpMethod.valueOf(request.getRequestLine().getMethod()).equals(HttpMethod.POST))
+        {
+            xltRequest.params(requestFilter.getRequestParams());
+        }
+        
         xltRequest.timerName(Context.get().timerName)
-                  .baseUrl(target.toURI())
+                  .baseUrl(uriBuilder.toString())
                   .body(requestFilter.getBody()) // if the method is not POST the body will be empty
                   .relativeUrl(request.getRequestLine().getUri())
                   .method(HttpMethod.valueOf(request.getRequestLine().getMethod()));
 
         Stream.of(request.getAllHeaders()).forEachOrdered(h -> xltRequest.header(h.getName(), h.getValue()));
         
-        xltRequest.params(requestFilter.getQueryParams());
-        xltRequest.params(requestFilter.getRequestParams());
         
         try
         {
@@ -135,5 +157,33 @@ public class MyHttpClient extends AbstractHttpClient
         }
         
         return filter;
+    }
+    
+    /**
+     * Add an URL parameter.
+     *
+     * @param name  the parameter's name
+     * @param value the parameter's value
+     * @return HttpRequest configuration
+     */
+    public URIBuilder param(final String name, String value, URIBuilder uriBuilder)
+    {
+        Args.notBlank(name, "Parameter name");
+
+        uriBuilder.addParameter(name, value);
+        return uriBuilder;
+    }
+    
+    /**
+     * Add URL parameters.
+     *
+     * @param params the URL parameters given as name-value pairs
+     * @return HttpRequest configuration
+     */
+    public URIBuilder params(final List<NameValuePair> params, URIBuilder uriBuilder)
+    {
+        Args.notNull(params, "Parameters");
+        params.forEach(p -> param(p.getName(), p.getValue(), uriBuilder));
+        return uriBuilder;
     }
 }

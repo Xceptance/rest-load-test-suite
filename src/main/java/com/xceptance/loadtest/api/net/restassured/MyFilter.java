@@ -17,7 +17,6 @@ public class MyFilter implements Filter
             FilterContext ctx)
     {
         requestSpec2 = requestSpec;
-
         return ctx.next(requestSpec, responseSpec);
     }
     
