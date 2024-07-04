@@ -8,6 +8,7 @@ package com.xceptance.loadtest.rest.actions.jsonserver.data;
 public class Post
 {
     public String id;
+    public String userId;
     public String author;
     public String title;
     public String body;
