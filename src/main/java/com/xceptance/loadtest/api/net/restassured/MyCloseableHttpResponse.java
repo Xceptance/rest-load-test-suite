@@ -57,6 +57,12 @@ public class MyCloseableHttpResponse implements CloseableHttpResponse
     {
         this.params = params;
     }
+    
+    @Override
+    public HttpParams getParams()
+    {
+        return params;
+    }
 
     @Override
     public void setHeaders(final Header[] headers)
@@ -131,12 +137,6 @@ public class MyCloseableHttpResponse implements CloseableHttpResponse
         return new ProtocolVersion(name, major, minor);
     }
 
-    @Override
-    public HttpParams getParams()
-    {
-        params = Optional.ofNullable(params).orElseGet(() -> new MyHttpParams(webResponse.getWebRequest().getParameters()));
-        return params;
-    }
 
     @Override
     public Header getLastHeader(final String name)
