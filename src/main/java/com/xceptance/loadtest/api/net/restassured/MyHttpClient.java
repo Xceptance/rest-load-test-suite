@@ -1,11 +1,10 @@
 package com.xceptance.loadtest.api.net.restassured;
 
-import com.xceptance.loadtest.api.util.Context;
-import com.xceptance.xlt.engine.httprequest.HttpResponse;
-
-import io.restassured.RestAssured;
-import io.restassured.filter.Filter;
-import io.restassured.specification.RequestSpecification;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpHost;
@@ -33,18 +32,18 @@ import org.htmlunit.HttpMethod;
 import org.htmlunit.WebResponse;
 import org.htmlunit.util.NameValuePair;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+import com.xceptance.loadtest.api.util.Context;
+import com.xceptance.xlt.engine.httprequest.HttpResponse;
+
+import io.restassured.RestAssured;
+import io.restassured.filter.Filter;
 
 /**
  * Wrapping XLT web client
  */
 public class MyHttpClient extends AbstractHttpClient
 {
-    private Object uriBuilder;
+    private URIBuilder uriBuilder;
 
     public MyHttpClient()
     {
@@ -109,15 +108,16 @@ public class MyHttpClient extends AbstractHttpClient
         try
         {
             uriBuilder = new URIBuilder(target.toURI());
-            requestFilter.getQueryParams().entrySet().forEach(e -> ((URIBuilder) uriBuilder).addParameter(e.getKey(), e.getValue()));
-            
-        } catch (URISyntaxException e)
+        }
+        catch (URISyntaxException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        requestFilter.getQueryParams().entrySet()
+                .forEach(e -> ((URIBuilder) uriBuilder).addParameter(e.getKey(), e.getValue()));
+
         // add the params to the url
-        
 
         if (HttpMethod.valueOf(request.getRequestLine().getMethod()).equals(HttpMethod.POST))
         {
@@ -131,7 +131,6 @@ public class MyHttpClient extends AbstractHttpClient
                   .method(HttpMethod.valueOf(request.getRequestLine().getMethod()));
 
         Stream.of(request.getAllHeaders()).forEachOrdered(h -> xltRequest.header(h.getName(), h.getValue()));
-        
         
         try
         {
@@ -148,7 +147,7 @@ public class MyHttpClient extends AbstractHttpClient
         MyFilter filter = null; 
         List<Filter> filters = RestAssured.filters();
         
-        Optional<Filter> first = filters.stream().filter(p -> p instanceof MyFilter) .findFirst();
+        Optional<Filter> first = filters.stream().filter(p -> p instanceof MyFilter).findFirst();
         
         if (first.isPresent())
         {
