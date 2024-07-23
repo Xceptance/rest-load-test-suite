@@ -10,28 +10,30 @@ import io.restassured.specification.FilterableResponseSpecification;
 
 public class MyFilter implements Filter
 {
-    private FilterableRequestSpecification requestSpec2;
+    public final static ThreadLocal<FilterableRequestSpecification> localRequestSpec = new ThreadLocal<FilterableRequestSpecification>();
 
     @Override
     public Response filter(FilterableRequestSpecification requestSpec, FilterableResponseSpecification responseSpec,
             FilterContext ctx)
     {
-        requestSpec2 = requestSpec;
+        localRequestSpec.set(requestSpec);
+
+        // requestSpec2 = requestSpec;
         return ctx.next(requestSpec, responseSpec);
     }
     
     public String getBody()
     {
-        return requestSpec2.getBody();
+        return localRequestSpec.get().getBody();
     }
     
     public Map<String, String> getQueryParams()
     {
-        return requestSpec2.getQueryParams();
+        return localRequestSpec.get().getQueryParams();
     }
     
     public Map<String, String> getRequestParams()
     {
-        return requestSpec2.getRequestParams();
+        return localRequestSpec.get().getRequestParams();
     }
 }

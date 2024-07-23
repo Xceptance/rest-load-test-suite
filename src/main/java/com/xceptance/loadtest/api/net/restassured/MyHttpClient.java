@@ -43,8 +43,6 @@ import io.restassured.filter.Filter;
  */
 public class MyHttpClient extends AbstractHttpClient
 {
-    private URIBuilder uriBuilder;
-
     public MyHttpClient()
     {
         this(null, null);
@@ -70,7 +68,7 @@ public class MyHttpClient extends AbstractHttpClient
     @Override
     public void close()
     {
-        // there's nothing to close
+        MyFilter.localRequestSpec.remove();
     }
     
     @Override
@@ -98,20 +96,20 @@ public class MyHttpClient extends AbstractHttpClient
         return new MyCloseableHttpResponse(webResponse);
     }
 
-    private HttpResponse load(final HttpHost target, final HttpRequest request)
+    private HttpResponse load(final HttpHost target, final HttpRequest request) throws IOException
     {
         final com.xceptance.xlt.engine.httprequest.HttpRequest xltRequest = new com.xceptance.xlt.engine.httprequest.HttpRequest();
         
         MyFilter requestFilter = getRequestFilter();
         
-        uriBuilder = null;
+        final URIBuilder uriBuilder;
         try
         {
             uriBuilder = new URIBuilder(target.toURI());
         }
         catch (URISyntaxException e)
         {
-            e.printStackTrace();
+            throw new IOException(e);
         }
 
         requestFilter.getQueryParams().entrySet()
