@@ -1,14 +1,15 @@
 package com.xceptance.loadtest.api.net.restassured;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.http.ConnectionReuseStrategy;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
+import org.apache.http.RequestLine;
 import org.apache.http.client.AuthenticationStrategy;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpRequestRetryHandler;
@@ -16,27 +17,22 @@ import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.RequestDirector;
 import org.apache.http.client.UserTokenHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.routing.HttpRoutePlanner;
 import org.apache.http.impl.client.AbstractHttpClient;
+import org.apache.http.impl.io.EmptyInputStream;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpProcessor;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpRequestExecutor;
-import org.apache.http.util.Args;
 import org.htmlunit.HttpMethod;
 import org.htmlunit.WebResponse;
-import org.htmlunit.util.NameValuePair;
 
 import com.xceptance.loadtest.api.util.Context;
 import com.xceptance.xlt.engine.httprequest.HttpResponse;
-
-import io.restassured.RestAssured;
-import io.restassured.filter.Filter;
 
 /**
  * Wrapping XLT web client
@@ -66,12 +62,6 @@ public class MyHttpClient extends AbstractHttpClient
     }
     
     @Override
-    public void close()
-    {
-        MyFilter.localRequestSpec.remove();
-    }
-    
-    @Override
     protected RequestDirector createClientRequestDirector(
             final HttpRequestExecutor requestExec,
             final ClientConnectionManager conman,
@@ -84,7 +74,8 @@ public class MyHttpClient extends AbstractHttpClient
             final AuthenticationStrategy targetAuthStrategy,
             final AuthenticationStrategy proxyAuthStrategy,
             final UserTokenHandler userTokenHandler,
-            final HttpParams params) {
+            final HttpParams params)
+    {
         return this::fire;
     }
 
@@ -98,35 +89,27 @@ public class MyHttpClient extends AbstractHttpClient
 
     private HttpResponse load(final HttpHost target, final HttpRequest request) throws IOException
     {
+    	// extract all needed info from Apache request
+        final RequestLine requestLine = request.getRequestLine();
+        final String method = requestLine.getMethod();
+        final String uri = requestLine.getUri();
+
+        final InputStream body;
+        if (request instanceof HttpEntityEnclosingRequest)
+        {
+            body = ((HttpEntityEnclosingRequest) request).getEntity().getContent();
+        }
+        else
+        {
+        	body = EmptyInputStream.INSTANCE;
+        }
+
+        // build XLT request
         final com.xceptance.xlt.engine.httprequest.HttpRequest xltRequest = new com.xceptance.xlt.engine.httprequest.HttpRequest();
-        
-        MyFilter requestFilter = getRequestFilter();
-        
-        final URIBuilder uriBuilder;
-        try
-        {
-            uriBuilder = new URIBuilder(target.toURI());
-        }
-        catch (URISyntaxException e)
-        {
-            throw new IOException(e);
-        }
-
-        requestFilter.getQueryParams().entrySet()
-                .forEach(e -> ((URIBuilder) uriBuilder).addParameter(e.getKey(), e.getValue()));
-
-        // add the params to the url
-
-        if (HttpMethod.valueOf(request.getRequestLine().getMethod()).equals(HttpMethod.POST))
-        {
-            xltRequest.params(requestFilter.getRequestParams());
-        }
-        
         xltRequest.timerName(Context.get().timerName)
-                  .baseUrl(uriBuilder.toString())
-                  .body(requestFilter.getBody()) // if the method is not POST the body will be empty
-                  .relativeUrl(request.getRequestLine().getUri())
-                  .method(HttpMethod.valueOf(request.getRequestLine().getMethod()));
+                  .baseUrl(uri)
+                  .body(body) // if the method is not POST the body will be empty
+                  .method(HttpMethod.valueOf(method));
 
         Stream.of(request.getAllHeaders()).forEachOrdered(h -> xltRequest.header(h.getName(), h.getValue()));
         
@@ -138,49 +121,5 @@ public class MyHttpClient extends AbstractHttpClient
         {
             throw new RuntimeException(e);
         }
-    }
-    
-    private MyFilter getRequestFilter()
-    {
-        MyFilter filter = null; 
-        List<Filter> filters = RestAssured.filters();
-        
-        Optional<Filter> first = filters.stream().filter(p -> p instanceof MyFilter).findFirst();
-        
-        if (first.isPresent())
-        {
-            // safe to cast -> it extends the default filter
-            filter = (MyFilter) first.get();
-        }
-        
-        return filter;
-    }
-    
-    /**
-     * Add an URL parameter.
-     *
-     * @param name  the parameter's name
-     * @param value the parameter's value
-     * @return HttpRequest configuration
-     */
-    public URIBuilder param(final String name, String value, URIBuilder uriBuilder)
-    {
-        Args.notBlank(name, "Parameter name");
-
-        uriBuilder.addParameter(name, value);
-        return uriBuilder;
-    }
-    
-    /**
-     * Add URL parameters.
-     *
-     * @param params the URL parameters given as name-value pairs
-     * @return HttpRequest configuration
-     */
-    public URIBuilder params(final List<NameValuePair> params, URIBuilder uriBuilder)
-    {
-        Args.notNull(params, "Parameters");
-        params.forEach(p -> param(p.getName(), p.getValue(), uriBuilder));
-        return uriBuilder;
     }
 }

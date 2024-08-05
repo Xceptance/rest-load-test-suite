@@ -5,8 +5,6 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.restassured.RestAssured;
-
 import org.junit.Assert;
 
 import com.google.gson.Gson;
@@ -19,7 +17,6 @@ import com.xceptance.loadtest.api.data.Account;
 import com.xceptance.loadtest.api.data.CustomTimer;
 import com.xceptance.loadtest.api.data.ExclusiveDataSupplier;
 import com.xceptance.loadtest.api.data.Site;
-import com.xceptance.loadtest.api.net.restassured.MyFilter;
 import com.xceptance.loadtest.api.net.restassured.MyHttpClient;
 import com.xceptance.loadtest.rest.configuration.Configuration;
 import com.xceptance.loadtest.rest.data.TestData;
@@ -28,6 +25,8 @@ import com.xceptance.xlt.api.util.XltLogger;
 import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.api.util.XltRandom;
 import com.xceptance.xlt.common.XltConstants;
+
+import io.restassured.RestAssured;
 
 /**
  * Central component for configuration, current page, last action and all test related data.
@@ -62,10 +61,8 @@ public class Context
     // Prepare for REST Assured actions
     static
     {
-        RestAssured.config = io.restassured.RestAssured.config().
+        RestAssured.config = RestAssured.config().
                 httpClient(RestAssured.config().getHttpClientConfig().httpClientFactory(MyHttpClient::new));
-        // the filter is needed as default, to get the data before the request is fired -> mapping to XLTRequest
-        RestAssured.filters(new MyFilter());
     }
 
     /**
