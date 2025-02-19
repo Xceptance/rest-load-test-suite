@@ -27,15 +27,15 @@ public class TPostsGetAsObjects extends RESTTestCase
 
         
         // just fetch all posts aka the first one
-        Post[] posts = Actions.get("RestAssuredRequest Get All", t ->
+        final Post[] posts = Actions.get("Get Posts", t ->
         {
-            Response response = given()
-                                    .baseUri(host)
-                                .when()
-                                    .get("/posts");
+            final Response response = given()
+                                        .baseUri(host)
+                                     .when()
+                                        .get("/posts");
 
             response.then().assertThat()
-                    .statusCode(200);
+                        .statusCode(200);
             
             final Post[] postsResponse = response.getBody().as(Post[].class);
             
@@ -52,12 +52,12 @@ public class TPostsGetAsObjects extends RESTTestCase
             // show a nice way of organizing code at the same time
             final Post postToGet = posts[XltRandom.nextInt(posts.length)];
             
-            Actions.run("RestAssuredRequest Get", t ->
+            Actions.run("Get Post", t ->
             {
-                Response response = given()
-                                        .baseUri(host)
-                                    .when()
-                        .get("/posts/" + postToGet.id);
+                final Response response = given()
+                                            .baseUri(host)
+                                        .when()
+                                            .get("/posts/" + postToGet.id);
                 
                 response.then().assertThat()
                     .statusCode(200);

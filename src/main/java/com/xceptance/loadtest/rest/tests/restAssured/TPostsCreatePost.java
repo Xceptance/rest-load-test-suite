@@ -3,7 +3,6 @@ package com.xceptance.loadtest.rest.tests.restAssured;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
-import com.google.gson.Gson;
 import com.xceptance.loadtest.api.data.DataSupplier;
 import com.xceptance.loadtest.api.tests.RESTTestCase;
 import com.xceptance.loadtest.api.util.Actions;
@@ -21,23 +20,23 @@ public class TPostsCreatePost extends RESTTestCase
     @Override
     public void test() throws Throwable
     {
-        // this can be of course also passed to this method or look at the larger framework
+        // This can be of course also passed to this method or look at the larger framework
         // https://github.com/Xceptance/posters-advanced-loadtest-suite and its Context concept
         final String host = Context.configuration().jsonplaceholderHost;
 
-        // create a post and set data
+        // Create a post and set data
         final Post post = new Post();
         post.author = DataSupplier.firstName();
         post.title = "Entry of " + DataSupplier.town();
         post.body = DataSupplier.getText(2, false);
         
         // Same scenario, just using REST-Assured
-        Actions.run("RestAssuredRequest Post", t ->
+        Actions.run("Create Post", t ->
         {
             given()
                 .baseUri(host)
-                .body(new Gson().toJson(post))
-                .header("Content-Type", "application/json; charset=UTF-8")
+                .body(post)
+                .header("Content-Type", "application/json")
             .when()
                 .post("/posts")
             .then().assertThat()

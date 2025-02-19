@@ -2,10 +2,6 @@ package com.xceptance.loadtest.rest.actions.jsonserver;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Assert;
-
-import org.htmlunit.HttpMethod;
-import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import com.xceptance.loadtest.api.util.Actions;
@@ -14,6 +10,9 @@ import com.xceptance.loadtest.rest.actions.jsonserver.data.Post;
 import com.xceptance.loadtest.rest.util.GsonUtil;
 import com.xceptance.xlt.engine.httprequest.HttpRequest;
 import com.xceptance.xlt.engine.httprequest.HttpResponse;
+
+import org.htmlunit.HttpMethod;
+import org.junit.Assert;
 
 /**
  * This groups some activities together and centralizes code. This is an example and not a mandatory
@@ -94,7 +93,7 @@ public class Posts
                             .timerName(t)
                             .baseUrl(Context.configuration().jsonplaceholderHost)
                             .relativeUrl("/posts")
-                            .body(new Gson().toJson(post)) // Serialize it
+                            .body(post.toString()) // Serialize it
                             .method(HttpMethod.POST)
                             .header("Content-type", "application/json; charset=UTF-8")
                             .fire();

@@ -16,7 +16,7 @@ public class TPostsCreatePost extends RESTTestCase
     @Override
     public void test() throws Throwable
     {
-        // create a post and set data
+        // Create a post and set data
         final Post post = new Post();
         post.author = DataSupplier.firstName();
         post.title = "Entry of " + DataSupplier.town();

@@ -24,7 +24,7 @@ public class TPostsGetPlain extends RESTTestCase
         // https://github.com/Xceptance/posters-advanced-loadtest-suite and its Context concept
         final String host = Context.configuration().jsonplaceholderHost;
 
-        Actions.run("RestAssuredRequest Get", t ->
+        Actions.run("Get First Post", t ->
         {
             given()
                 .baseUri(host)
