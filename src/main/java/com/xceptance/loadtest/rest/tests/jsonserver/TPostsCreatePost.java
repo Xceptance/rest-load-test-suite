@@ -23,6 +23,7 @@ public class TPostsCreatePost extends RESTTestCase
         post.body = DataSupplier.getText(2, false);
 
         // add a post and get the id
+        @SuppressWarnings("unused")
         final var id = Posts.create(post);
     }
 
