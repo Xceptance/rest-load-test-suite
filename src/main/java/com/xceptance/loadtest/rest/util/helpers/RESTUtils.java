@@ -4,13 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.xceptance.loadtest.api.data.supplier.DataLineSupplier;
 
-/**
- * Data Handling class, to read test data from predefined files.
- *
- * @author Rene Schwietzke
- */
-public class DataSupplier
+public class RESTUtils
 {
+
     /**
      * Returns a text composed of several sentences.
      *
@@ -34,5 +30,4 @@ public class DataSupplier
         }
         return removeWhitespace ? StringUtils.deleteWhitespace(b.toString()) : b.toString();
     }
-
 }

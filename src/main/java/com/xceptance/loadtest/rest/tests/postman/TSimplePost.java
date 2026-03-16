@@ -10,7 +10,7 @@ import com.xceptance.loadtest.api.data.supplier.DataLineSupplier;
 import com.xceptance.loadtest.rest.data.NonSiteRelatedTest;
 import com.xceptance.loadtest.rest.tests.LoadTestCase;
 import com.xceptance.loadtest.rest.util.helpers.Actions;
-import com.xceptance.loadtest.rest.util.helpers.DataSupplier;
+import com.xceptance.loadtest.rest.util.helpers.RESTUtils;
 import com.xceptance.xlt.api.util.XltRandom;
 import com.xceptance.xlt.engine.httprequest.HttpRequest;
 import com.xceptance.xlt.engine.httprequest.HttpResponse;
@@ -36,7 +36,7 @@ public class TSimplePost extends LoadTestCase implements NonSiteRelatedTest
 
         final String author = DataLineSupplier.getRandomLine("firstnames.txt");
         final String title = "Entry of " + DataLineSupplier.getRandomLine("towns.txt");
-        final String body = DataSupplier.getText(1, true);
+        final String body = RESTUtils.getText(1, true);
     }
 
     @Override
