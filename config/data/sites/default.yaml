@@ -1,0 +1,34 @@
+# This is the general data section. All this here also exists as plain properties,
+# for instance the closeWebClient configuration is accessible via getProperty("general.closeWebClient") or via Configuration
+# with name general.closeWebClient there as well.
+
+general:
+   # please refer to private-data.yaml for more details
+   # private-data should only be committed for projects, never
+   # for the template, hence we use the concept of .gitignore
+   # file to take care of that
+   consent:
+     ask: false # shall we load it at all?
+     confirm: false # false means no, aka we sent no back
+   rest:
+     closeWebClient: true
+     clearCookies: true
+   closeWebClient: false
+   clearCookies: false
+   userAgent: XLT RestTest Suite 1.0 (https://github.com/Xceptance/posters-advanced-loadtest-suite)
+   
+jsonplaceholder:
+   host: https://jsonplaceholder.typicode.com
+   get:
+      count.range: 3-5
+
+data:
+  file:
+    firstNames: firstnames.txt
+    lastNames: lastnames.txt
+
+account:
+  defaults:
+    password: XC99-xc99
+  predefined:
+    file: accounts.csv

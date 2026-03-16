@@ -8,10 +8,10 @@ import org.htmlunit.HttpMethod;
 import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
-import com.xceptance.loadtest.api.util.Actions;
-import com.xceptance.loadtest.api.util.Context;
 import com.xceptance.loadtest.rest.actions.jsonserver.data.Post;
+import com.xceptance.loadtest.rest.util.Context;
 import com.xceptance.loadtest.rest.util.GsonUtil;
+import com.xceptance.loadtest.rest.util.helpers.Actions;
 import com.xceptance.xlt.engine.httprequest.HttpRequest;
 import com.xceptance.xlt.engine.httprequest.HttpResponse;
 
@@ -36,7 +36,7 @@ public class Posts
         {
             final HttpResponse r = new HttpRequest()
                             .timerName(t)
-                            .baseUrl(Context.configuration().jsonplaceholderHost)
+                            .baseUrl(Context.get().configuration.jsonplaceholderHost)
                             .relativeUrl("/posts")
                             .fire();
             r.checkStatusCode(200); // ok?
@@ -67,7 +67,7 @@ public class Posts
             // we can name it manually too of course
             final HttpResponse r = new HttpRequest()
                             .timerName(t)
-                            .baseUrl(Context.configuration().jsonplaceholderHost)
+                            .baseUrl(Context.get().configuration.jsonplaceholderHost)
                             .relativeUrl("/posts/" + id) // simple formatting of the url
                             .fire();
             r.checkStatusCode(200); // ok?
@@ -92,7 +92,7 @@ public class Posts
         {
             final HttpResponse r = new HttpRequest()
                             .timerName(t)
-                            .baseUrl(Context.configuration().jsonplaceholderHost)
+                            .baseUrl(Context.get().configuration.jsonplaceholderHost)
                             .relativeUrl("/posts")
                             .body(new Gson().toJson(post)) // Serialize it
                             .method(HttpMethod.POST)

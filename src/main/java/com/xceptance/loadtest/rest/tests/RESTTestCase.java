@@ -1,4 +1,4 @@
-package com.xceptance.loadtest.api.tests;
+package com.xceptance.loadtest.rest.tests;
 
 import java.text.MessageFormat;
 
@@ -6,11 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.xceptance.loadtest.api.data.Site;
-import com.xceptance.loadtest.api.data.SiteByMarketShare;
-import com.xceptance.loadtest.api.util.Context;
+import com.xceptance.loadtest.api.tests.HtmlUnitLoadTestCase;
+import com.xceptance.loadtest.rest.util.Context;
 import com.xceptance.xlt.api.engine.Session;
 import com.xceptance.xlt.api.util.XltLogger;
-import com.xceptance.xlt.api.util.XltProperties;
 import com.xceptance.xlt.api.util.XltRandom;
 import com.xceptance.xlt.engine.XltWebClient;
 import com.xceptance.xlt.engine.httprequest.HttpRequest;
@@ -20,7 +19,7 @@ import com.xceptance.xlt.engine.httprequest.HttpRequest;
  *
  * @author Rene Schwietzke
  */
-public abstract class RESTTestCase extends com.xceptance.xlt.api.tests.AbstractTestCase implements SiteByMarketShare
+public abstract class RESTTestCase extends HtmlUnitLoadTestCase
 {
     /**
      * The determined site
@@ -58,12 +57,14 @@ public abstract class RESTTestCase extends com.xceptance.xlt.api.tests.AbstractT
         // Set test name depending if we have sites or not
         setTestName(getSiteSpecificName(getTestName(), getSite().id));
 
-        // this moved here to make sure we see the exceptions
-        Context.createContext(
-                        XltProperties.getInstance(),
-                        Session.getCurrent().getUserName(),
-                        getClass().getName(),
-                        getSite());
+        // Create and attach context instance
+        Context.attach(new Context(getClass().getName(), getSite()));
+
+        // // this moved here to make sure we see the exceptions
+        // Context.createContext(XltProperties.getInstance(),
+        // Session.getCurrent().getUserName(), getClass().getName(),
+        // getSite());
+
     }
 
     public static String getSiteSpecificName(final String name, final String siteId)

@@ -1,13 +1,13 @@
 package com.xceptance.loadtest.rest.tests.wikipedia;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.Optional;
 
 import org.htmlunit.HttpMethod;
+
 import com.xceptance.loadtest.api.data.Account;
-import com.xceptance.loadtest.api.tests.RESTTestCase;
-import com.xceptance.loadtest.api.util.Context;
-import com.xceptance.loadtest.api.util.SimpleRESTJSONAction;
+import com.xceptance.loadtest.rest.tests.LoadTestCase;
+import com.xceptance.loadtest.rest.util.Context;
+import com.xceptance.loadtest.rest.util.helpers.SimpleRESTJSONAction;
 
 /**
  * Simple site specific example test case for the Wikipedia API. It follows the steps below:
@@ -19,14 +19,14 @@ import com.xceptance.loadtest.api.util.SimpleRESTJSONAction;
  * @author Bernd Weigel
  *
  */
-public class TWikipediaLogin extends RESTTestCase
+public class TWikipediaLogin extends LoadTestCase
 {
     // Constant name under which the login token will be stored in the name value store of the
     // test context.
     private static final String LOGIN_TOKEN_NAME = "loginToken";
 
     // The exclusive account to log into the site.
-    private Account account;
+    private Optional<Account> account;
 
     /**
      * {@inheritDoc}
@@ -44,7 +44,8 @@ public class TWikipediaLogin extends RESTTestCase
         // First of all we need an account. This account needs to be exclusive for this specific
         // test case run, so we won't overlap with other test case users.
         // A collection of accounts needs to be placed at config/data/sites/<SITE>/accounts.csv
-        account = Context.getExclusiveAccountFromFile();
+        Context.get().testData.attachAccountFromFile(true);
+        account = Context.get().testData.getAccount();
 
         // The Wikimedia API demands a token for a specific request, so we need to retrieve one, and
         // store it for later use.
@@ -70,54 +71,11 @@ public class TWikipediaLogin extends RESTTestCase
                         .param("lgtoken", String.valueOf(
                                         Context.get().getStored(LOGIN_TOKEN_NAME)))
                         .param("format", "json")
-                        .param("lgname", account.user)
-                        .param("lgpassword", account.password)
+                        .param("lgname", account.get().email)
+                        .param("lgpassword", account.get().password)
                         .param("action", "login")
                         .assertStatus(200)
                         .validateEquals("Login not successfull, check login data in accounts.csv", "$.login.result", "Success")
                         .run();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IOException
-     * @throws FileNotFoundException
-     */
-    @Override
-    public void tearDown()
-    {
-        // Put the account back, since we don't need it anymore and another test case can use it.
-        Context.releaseExclusiveAccount(account);
-
-        super.tearDown();
-
-        // Please note: the code below could also be placed in the super class and is mostly placed
-        // here for visibility. Still it depends on the actual implementation purposes.
-
-        // You can do alternatively just cleaning of the cookie state if you have any, if you
-        // don't have any... don't run that code, because performance testing is performance
-        // programming.
-        if (Context.configuration().clearCookies)
-        {
-            this.clearCookies();
-        }
-
-        // ** Release all resources so we don't have state
-        // If you test from a server against a service, you might want to keep that
-        // disabled because the server also won't close the pool. If you test from
-        // a client that does only a few calls in a session/transaction, you might
-        // want to use close() to emulate the state of the fresh connection. But that
-        // greatly limits throughput but it is as close to the real deal as possible.
-        // If your client collects a state aka cookies for instance, you probably have
-        // to take care of cleaning this manually of you don't want to close the connections
-        // to avoid the most expensive pieces aka HTTPS negotiations.
-        //
-        // If you don't close it, it can reuse the connection and the negotiated keys of TLS
-        // that is about 100x (!) faster than closing... but you have state of course, your call!
-        if (Context.configuration().closeWebClient)
-        {
-            this.closeWebClient();
-        }
     }
 }

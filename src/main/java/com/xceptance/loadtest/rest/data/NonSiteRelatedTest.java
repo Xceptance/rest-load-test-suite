@@ -1,4 +1,8 @@
-package com.xceptance.loadtest.api.data;
+package com.xceptance.loadtest.rest.data;
+
+import com.xceptance.loadtest.api.data.Site;
+import com.xceptance.loadtest.api.data.supplier.SiteSupplier;
+import com.xceptance.loadtest.api.tests.SiteByMarketShare;
 
 /**
  * Interface to disable Site specific test distribution. Use this instead of SiteByMarketShare if

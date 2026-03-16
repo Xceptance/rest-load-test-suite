@@ -11,7 +11,7 @@ import com.xceptance.loadtest.api.configuration.annotations.Property;
  *
  * @author Rene Schwietzke (Xceptance Software Technologies GmbH)
  */
-public class Configuration
+public class Configuration extends com.xceptance.loadtest.addons.configuration.Configuration
 {
     /**
      * The name of the current running TestCase' class

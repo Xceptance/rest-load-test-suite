@@ -1,4 +1,4 @@
-package com.xceptance.loadtest.api.util;
+package com.xceptance.loadtest.rest.util.helpers;
 
 @FunctionalInterface
 public interface Action

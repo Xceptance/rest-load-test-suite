@@ -1,16 +1,6 @@
-# This is the general data section. All this here also exists as plain properties,
-# for instance the closeWebClient configuration is accessible via getProperty("general.closeWebClient") or via Configuration
-# with name general.closeWebClient there as well.
-
-general:
-   closeWebClient: false
-   clearCookies: false
-   userAgent: XLT RestTest Suite 1.0 (https://github.com/Xceptance/posters-advanced-loadtest-suite)
-
-jsonplaceholder:
-   host: https://jsonplaceholder.typicode.com
-   get:
-      count.range: 3-5
+# Add api data files here
+data:
+    
 
 # Definition of all available sites
 sites:
@@ -25,6 +15,8 @@ sites:
         region: Europe
         marketshare: 40
     -   id: noneSite # this is a placeholder, to allow site independent test case configurations.
+        active: true 
+        marketshare: 0
 
 # The properties per site. This is automatically handled by
 # the suite and transferred into the property without site.DE for 
@@ -32,7 +24,11 @@ sites:
 # This is just an example to show this possibility.
 # You can also place this in the site specific property file such as
 # site.yaml and define values there (see sites/US/site.yaml).
+# Values such as general host are defined in private-data.yaml
 site:
+    noneSite:
+        general:
+           url: "https://${general.host}"
     DE:
         general:
            url:  "https://de.${general.host}"

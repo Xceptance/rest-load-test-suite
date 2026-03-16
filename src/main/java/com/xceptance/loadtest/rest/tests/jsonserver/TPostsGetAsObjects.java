@@ -2,13 +2,13 @@ package com.xceptance.loadtest.rest.tests.jsonserver;
 
 import static org.junit.Assert.assertEquals;
 
-import com.xceptance.loadtest.api.tests.RESTTestCase;
-import com.xceptance.loadtest.api.util.Context;
 import com.xceptance.loadtest.rest.actions.jsonserver.Posts;
+import com.xceptance.loadtest.rest.tests.LoadTestCase;
+import com.xceptance.loadtest.rest.util.Context;
 import com.xceptance.xlt.api.util.XltRandom;
 
 
-public class TPostsGetAsObjects extends RESTTestCase
+public class TPostsGetAsObjects extends LoadTestCase
 {
     /**
      * Using the http://jsonplaceholder.typicode.com/
@@ -25,7 +25,7 @@ public class TPostsGetAsObjects extends RESTTestCase
 
         // amount will be populated with a random value by the framework according to our
         // range spec in the properties such as 3-5, this is fix for this iteration!
-        final var amount = Context.configuration().jsonplaceholderGetCount.value;
+        final var amount = Context.get().configuration.jsonplaceholderGetCount.value;
         for (int i = 0; i < amount; i++)
         {
             // get us a random post and fetch it as a single activity

@@ -4,14 +4,14 @@ import org.junit.Assert;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
-import com.xceptance.loadtest.api.tests.RESTTestCase;
-import com.xceptance.loadtest.api.util.Actions;
-import com.xceptance.loadtest.api.util.Context;
+import com.xceptance.loadtest.rest.tests.LoadTestCase;
+import com.xceptance.loadtest.rest.util.Context;
+import com.xceptance.loadtest.rest.util.helpers.Actions;
 import com.xceptance.xlt.engine.httprequest.HttpRequest;
 import com.xceptance.xlt.engine.httprequest.HttpResponse;
 
 
-public class TPostsGetPlain extends RESTTestCase
+public class TPostsGetPlain extends LoadTestCase
 {
     /**
      * Using the http://jsonplaceholder.typicode.com/
@@ -23,7 +23,7 @@ public class TPostsGetPlain extends RESTTestCase
     {
         // this can be of course also passed to this method or look at the larger framework
         // https://github.com/Xceptance/posters-advanced-loadtest-suite and its Context concept
-        final var host = Context.configuration().jsonplaceholderHost;
+        final var host = Context.get().configuration.jsonplaceholderHost;
 
         // just fetch single post aka the first one
         Actions.run("Get First Post", t ->

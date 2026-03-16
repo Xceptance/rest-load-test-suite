@@ -1,16 +1,17 @@
-package com.xceptance.loadtest.api.util;
+package com.xceptance.loadtest.rest.util.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-
 import org.htmlunit.HttpMethod;
 import org.htmlunit.util.NameValuePair;
+import org.junit.Assert;
+
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
-import com.xceptance.loadtest.api.tests.RESTTestCase;
+import com.xceptance.loadtest.rest.tests.RESTTestCase;
+import com.xceptance.loadtest.rest.util.Context;
 import com.xceptance.xlt.api.actions.AbstractAction;
 import com.xceptance.xlt.engine.SessionImpl;
 import com.xceptance.xlt.engine.httprequest.HttpRequest;
@@ -68,7 +69,7 @@ public class SimpleRESTJSONAction extends AbstractAction
     {
         // Adjust action name if necessary, if we go with default and hence we don't rename with the
         // site id
-        final String siteId = Context.getSite().id;
+        final String siteId = Context.get().getSite().id;
         final String newTimerName = RESTTestCase.getSiteSpecificName(timerName, siteId);
 
         this.setTimerName(newTimerName);
@@ -259,7 +260,7 @@ public class SimpleRESTJSONAction extends AbstractAction
     private void handleStore(final StoragePrompt storagePrompt, final ReadContext ctx)
     {
         Assert.assertTrue("Response " + storagePrompt.jsonPath + " does not exists.", ctx.read(storagePrompt.jsonPath) != null);
-        Context.get().data.store.put(storagePrompt.name, ctx.read(storagePrompt.jsonPath));
+        Context.get().testData.store.put(storagePrompt.name, ctx.read(storagePrompt.jsonPath));
     }
 
     /**

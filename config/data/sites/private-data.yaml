@@ -7,5 +7,4 @@
 # If the data should be pushed, .gitignore on private-data.yaml needs to be remove and committed.
 
 general:
-    userAgent: "CoolToolName/0.0 (https://example.org/CoolTool/; CoolTool@example.org) UsedBaseLibrary/0.0" #Wikipedia requires a specific user agent, please adapt and see https://meta.wikimedia.org/wiki/User-Agent_policy
-    
+    host: site-specific-url.com

@@ -1,6 +1,7 @@
-package com.xceptance.loadtest.api.util;
+package com.xceptance.loadtest.rest.util.helpers;
 
-import com.xceptance.loadtest.api.tests.RESTTestCase;
+import com.xceptance.loadtest.rest.tests.RESTTestCase;
+import com.xceptance.loadtest.rest.util.Context;
 import com.xceptance.xlt.api.actions.AbstractAction;
 import com.xceptance.xlt.engine.SessionImpl;
 
@@ -60,7 +61,7 @@ public class Actions
                 finally
                 {
                     // add an empty "page" as the result of this action
-                    SessionImpl.getCurrent().getRequestHistory().add(RESTTestCase.getSiteSpecificName(getTimerName(), Context.getSite().id));
+                    SessionImpl.getCurrent().getRequestHistory().add(RESTTestCase.getSiteSpecificName(getTimerName(), Context.get().getSite().id));
                 }
             }
 
@@ -111,7 +112,7 @@ public class Actions
         {
             try
             {
-                result = action.get(RESTTestCase.getSiteSpecificName(getTimerName(), Context.getSite().id));
+                result = action.get(RESTTestCase.getSiteSpecificName(getTimerName(), Context.get().getSite().id));
             }
             catch (final Throwable e)
             {
@@ -138,7 +139,7 @@ public class Actions
             finally
             {
                 // add an empty "page" as the result of this action
-                SessionImpl.getCurrent().getRequestHistory().add(RESTTestCase.getSiteSpecificName(getTimerName(), Context.getSite().id));
+                SessionImpl.getCurrent().getRequestHistory().add(RESTTestCase.getSiteSpecificName(getTimerName(), Context.get().getSite().id));
             }
         }
     }

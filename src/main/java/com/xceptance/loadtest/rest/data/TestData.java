@@ -11,7 +11,7 @@ import com.xceptance.loadtest.api.data.Site;
  *
  * @author Rene Schwietzke
  */
-public class TestData
+public class TestData extends com.xceptance.loadtest.addons.configuration.TestData
 {
     // simple key-value store
     public Map<String, Object> store = new HashMap<>(41);
