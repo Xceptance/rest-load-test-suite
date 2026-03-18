@@ -37,23 +37,4 @@ public class TPostsGetAsObjects extends LoadTestCase
             assertEquals(postToGet.id, post.id);
         }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void tearDown()
-    {
-        super.tearDown();
-
-        // if you don't close it, it can reuse the connection and the negotiated keys of TLS
-        // that is about 100x (!) faster than closing... but you have state of course, your call!!!!
-        // this.closeWebClient();
-
-        // you can do alternatively just cleaning of the cookie state if you have any, if you
-        // don't have any... don't run that code, because performance testing is performance
-        // programming
-        // this.clearCookies();
-    }
 }
-

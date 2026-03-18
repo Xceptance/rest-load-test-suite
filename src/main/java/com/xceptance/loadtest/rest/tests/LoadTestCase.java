@@ -31,4 +31,5 @@ public abstract class LoadTestCase extends HtmlUnitLoadTestCase
         // Shut down test case
         super.tearDown();
     }
+
 }

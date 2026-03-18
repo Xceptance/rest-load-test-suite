@@ -22,7 +22,6 @@ import com.xceptance.xlt.engine.httprequest.HttpResponse;
  */
 public class TBasicAuth extends LoadTestCase implements NonSiteRelatedTest
 {
-
     @Override
     public void test() throws Throwable
     {

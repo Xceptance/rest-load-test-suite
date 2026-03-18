@@ -56,23 +56,4 @@ public class Configuration extends com.xceptance.loadtest.addons.configuration.C
 
     @Property(key = "wiki.continueSearch", immutable = false, required = false)
     public ConfigProbability continueSearch;
-
-    /**
-     * Returns the properties that are current for this context and the source of this
-     * configuration. You can also directly access them, if you like.
-     *
-     * @return the property set
-     */
-    public LTProperties getProperties()
-    {
-        return properties;
-    }
-
-    /**
-     * Constructor
-     */
-    public Configuration()
-    {
-    	super();
-    }
 }

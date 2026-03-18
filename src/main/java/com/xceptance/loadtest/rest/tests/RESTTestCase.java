@@ -54,9 +54,6 @@ public abstract class RESTTestCase extends HtmlUnitLoadTestCase
         // set the web client in this context
         HttpRequest.setDefaultWebClient(WEBCLIENT.get());
 
-        // Set test name depending if we have sites or not
-        setTestName(getSiteSpecificName(getTestName(), getSite().id));
-
         // Create and attach context instance
         Context.attach(new Context(getClass().getName(), getSite()));
 
