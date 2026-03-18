@@ -6,6 +6,7 @@ import org.htmlunit.HttpMethod;
 
 import com.xceptance.loadtest.api.data.supplier.DataLineSupplier;
 import com.xceptance.loadtest.rest.tests.LoadTestCase;
+import com.xceptance.loadtest.rest.tests.RESTTestCase;
 import com.xceptance.loadtest.rest.util.Context;
 import com.xceptance.loadtest.rest.util.helpers.SimpleRESTJSONAction;
 import com.xceptance.xlt.api.util.XltRandom;
@@ -26,9 +27,8 @@ import net.minidev.json.JSONArray;
  * @author Bernd Weigel
  *
  */
-public class TWikipediaSearch extends LoadTestCase
+public class TWikipediaSearch extends RESTTestCase
 {
-
     /**
      * {@inheritDoc}
      */
